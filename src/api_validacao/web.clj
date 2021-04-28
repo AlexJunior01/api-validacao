@@ -14,7 +14,8 @@
             [spec-tools.spell :as spell]
             [ring.adapter.jetty :as jetty]
             [muuntaja.core :as m]
-            [clojure.java.io :as io]))
+            [clojure.java.io :as io]
+            [api-validacao.routes.cpf :as cpf]))
 
 
 (def app
@@ -31,7 +32,8 @@
         ["/healthcheck" {:get {:summary "Check if is online"
                          :responses {200 {:body {:message string?}}}
                          :handler (fn [_] {:status 200
-                                           :body {:message "The API is working!!"}})}}]]]
+                                           :body {:message "The API is working!!"}})}}]]
+       cpf/routes]
 
 
       {:exception pretty/exception
