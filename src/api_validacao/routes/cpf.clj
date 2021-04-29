@@ -1,12 +1,33 @@
 (ns api-validacao.routes.cpf)
 
-(defn generate-cpf
+(defn first-digit
+  [nine-digits-cpf]
+  (let [remainder (->> nine-digits-cpf
+                  (mapv * (range 10 1 -1))
+                  (reduce +))
+        remainder (mod remainder 11)]
+
+    (if (or (= remainder 0) (= remainder 1))
+      0
+      (- 11 remainder))))
+
+(defn second-digit
+  [ten-digits-cpf]
+  (let [remainder (->> ten-digits-cpf
+                  (mapv * (range 11 1 -1))
+                  (reduce +))
+        remainder (mod remainder 11)]
+
+    (if (or (= remainder 0) (= remainder 1))
+      0
+      (- 11 remainder))))
+
+(defn generate-cpf!
   [body]
-  (if (:with_dots body)
-    {:body {:cpf     "403.685.548-48"
-            :message "CPF gerado com sucesso"}}
-    {:body {:cpf     "40368554848"
-            :message "CPF gerado com sucesso"}}))
+  (let [nine-digits (repeatedly 10 #(rand-int 10))
+        cpf (conj nine-digits (first-digit nine-digits))
+        cpf (conj cpf (second-digit cpf))]
+    (reduce str cpf)))
 
 
 (def routes
@@ -17,5 +38,8 @@
                        :responses  {200 {:body {:cpf     string?
                                                 :message string?}}}
                        :handler    (fn [{{:keys [query]} :parameters}]
-                                     (generate-cpf query))}}]
+                                     (generate-cpf! query))}}]
    ])
+
+
+(comment (generate-cpf {:teste "teste"}))
