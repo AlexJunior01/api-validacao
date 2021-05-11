@@ -25,6 +25,7 @@
 
 
 (defn mask-cpf
+  "Receive an 11-digits CPF and returns the cpf with dots."
   [cpf]
   (str (subs cpf 0 3) "." (subs cpf 3 6) "." (subs cpf 6 9) "-" (subs cpf 9 11)))
 
@@ -41,7 +42,5 @@
   [body]
   (let [cpf (generate-cpf!)]
     (if (:with_dots body)
-      {:body {:cpf     (mask-cpf cpf)
-              :message "CPF gerado com sucesso"}}
-      {:body {:cpf     cpf
-              :message "CPF gerado com sucesso"}})))
+      {:body {:cpf (mask-cpf cpf)}}
+      {:body {:cpf cpf}})))
