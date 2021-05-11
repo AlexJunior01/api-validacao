@@ -32,7 +32,7 @@
 
 (defn generate-cpf!
   []
-  (let [nine-digits (repeatedly 10 #(rand-int 10))
+  (let [nine-digits (repeatedly 9 #(rand-int 10))
         cpf (conj nine-digits (first-digit nine-digits))
         cpf (conj cpf (second-digit cpf))]
     (reduce str cpf)))
