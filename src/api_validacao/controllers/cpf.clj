@@ -1,4 +1,5 @@
-(ns api-validacao.controllers.cpf)
+(ns api-validacao.controllers.cpf
+  (:require [api_validacao.http :as http]))
 
 
 (defn first-digit
@@ -40,7 +41,8 @@
 
 (defn handle-cpf-generate
   [body]
-  (let [cpf (generate-cpf!)]
-    (if (:with_dots body)
-      {:body {:cpf (mask-cpf cpf)}}
-      {:body {:cpf cpf}})))
+  (let [cpf (generate-cpf!)
+        resp {:cpf (if (:with_dots body)
+                     (mask-cpf cpf)
+                     cpf)}]
+    (http/json-http-ok resp)))
