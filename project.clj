@@ -5,5 +5,6 @@
             :url "https://www.eclipse.org/legal/epl-2.0/"}
   :dependencies [[org.clojure/clojure "1.10.1"]
                  [ring/ring-jetty-adapter "1.7.1"]
-                 [metosin/reitit "0.5.13"]]
+                 [metosin/reitit "0.5.13"]
+                 [cheshire "5.10.0"]]
   :repl-options {:init-ns api-validacao.core})
