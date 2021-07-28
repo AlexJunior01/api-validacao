@@ -10,10 +10,7 @@
   [body status]
   (try
     {:status  status
-     :body    (if (string? body)
-                body
-                (json/generate-string body true))
-     :headers {"Content-Type" "application/json"}
+     :body    body
      }
     (catch Exception e
       standard-error)))
