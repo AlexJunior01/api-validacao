@@ -1,6 +1,10 @@
 (ns api-validacao.controllers.cpf
-  (:require [api_validacao.http :as http]))
+  (:require [api_validacao.http :as http]
+            [clojure.string :as string]))
 
+(defn parse-int
+  [char]
+  (Integer/parseInt (str char)))
 
 (defn first-digit
   [nine-digits-cpf]
@@ -46,3 +50,34 @@
                      (mask-cpf cpf)
                      cpf)}]
     (http/json-http-ok resp)))
+
+(defn remove-mask
+  [cpf]
+  (-> cpf
+      (string/replace "." "")
+      (string/replace "-" "")))
+
+(defn cpf-is-valid?
+  [cpf digit1 digit2]
+  (if (= (count cpf) 11)
+    (and (= digit1 (nth cpf 9))
+         (= digit2 (nth cpf 10)))
+    false))
+
+(defn handle-validate-cpf
+  [{:keys [cpf] :as body}]
+  (try
+    (let [cpf (remove-mask cpf)
+          numbers (vec (map parse-int cpf))
+          digit1 (first-digit (subvec numbers 0 10))
+          digit2 (second-digit (subvec numbers 0 11))
+          response (cpf-is-valid? numbers digit1 digit2)]
+      (if response
+        (http/json-http-ok {:cpf   cpf
+                            :valid true})
+        (http/json-http-ok {:cpf   cpf
+                            :valid false})))
+    (catch Exception e
+      (http/json-http-server-error {:cpf cpf
+                                    :valid false
+                                    :message (str "Error: " e)}))))

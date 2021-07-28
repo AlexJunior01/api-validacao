@@ -24,7 +24,8 @@
       [["/swagger.json"
         {:get {:no-doc true
                :swagger {:info {:title "Validation API"
-                                :description "API for validation of documents"}}
+                                :description "API for validation of documents"
+                                :version  "0.0.3"}}
                :handler (swagger/create-swagger-handler)}}]
 
        ["/api"
