@@ -14,6 +14,7 @@
                         :parameters {:body {:cpf string?}}
                         :handler    (fn [{{:keys [body]} :parameters}]
                                       (cpf/handle-validate-cpf body))
-                        :responses {200 {:body ::spec/validate-cpf-response}}}}]
+                        :responses {200 {:body ::spec/validate-cpf-response}
+                                    500 {:body ::spec/validate-cpf-response}}}}]
    ])
 

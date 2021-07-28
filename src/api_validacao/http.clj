@@ -19,3 +19,7 @@
 (defn json-http-ok
   [body]
   (json-http body 200))
+
+(defn json-http-server-error
+  [body]
+  (json-http body 500))

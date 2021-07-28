@@ -66,13 +66,18 @@
 
 (defn handle-validate-cpf
   [{:keys [cpf] :as body}]
-  (let [cpf (remove-mask cpf)
-        numbers (vec (map parse-int cpf))
-        digit1 (first-digit (subvec numbers 0 10))
-        digit2 (second-digit (subvec numbers 0 11))
-        response (cpf-is-valid? numbers digit1 digit2)]
-    (if response
-      (http/json-http-ok {:cpf   cpf
-                          :valid true})
-      (http/json-http-ok {:cpf   cpf
-                          :valid false}))))
+  (try
+    (let [cpf (remove-mask cpf)
+          numbers (vec (map parse-int cpf))
+          digit1 (first-digit (subvec numbers 0 10))
+          digit2 (second-digit (subvec numbers 0 11))
+          response (cpf-is-valid? numbers digit1 digit2)]
+      (if response
+        (http/json-http-ok {:cpf   cpf
+                            :valid true})
+        (http/json-http-ok {:cpf   cpf
+                            :valid false})))
+    (catch Exception e
+      (http/json-http-server-error {:cpf cpf
+                                    :valid false
+                                    :message (str "Error: " e)}))))
